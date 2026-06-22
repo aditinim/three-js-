@@ -3,21 +3,29 @@ import * as THREE from "three"
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 
-console.log(THREE);
+const size= {
+    width: window.innerWidth,
+    height: window.innerHeight
+}
 
 //Scene
 const scene = new THREE.Scene();
 
+//clock
+const clock= new THREE.Clock();
+
 
 //camera
 const camera = new THREE.PerspectiveCamera(
-    75,  //fov -> field of view -> vertical angle- > side view 
-    window.innerWidth/window.innerHeight, //aspect ratio -> w/h
-    0.01, //min distance
-    100, //max distance
+    75,  
+    size.width/size.height, 
+    0.01, 
+    100,
 )
 
 camera.position.z= 5;
+
+
 
 const geometry= new THREE.BoxGeometry(1, 1, 1) //width, height, depth -> shape
 const material = new THREE.MeshBasicMaterial({ color: "#5be8f5" }); //kapde
@@ -25,48 +33,46 @@ const cube= new THREE.Mesh(geometry, material); //actor
 
 
 
-
-
-
-
 scene.add(cube);
 
 
 //canvas (parda)
-
 const canvas= document.querySelector("canvas");
 
 
 //renderer -> projector
-
 const renderer= new THREE.WebGLRenderer({
-    //kis project ko project krwana hai 
-    // canvas: canvas,
-    canvas, //coz both key and value are same
+    canvas, 
 });
 
 const controls = new OrbitControls( camera, renderer.domElement );
-
 controls.enableDamping= true;
 
 //projector ka aspect ratio
-renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setSize(size.width, size.height);
+window.addEventListener('resize', ()=>{
+    size.width= window.innerWidth;
+    size.height= window.innerHeight;
 
-// renderede ko chalu krna pdega 
-//ho gya on
+    camera.aspect= size.width/ size.height;
+    camera.updateProjectionMatrix();
 
+    renderer.setSize(size.width, size.height);
+
+})
 
 
 const animate= ()=>{
-    // cube.rotation.y+= 0.01;
     // cube.rotation.x+= 0.01;
 
+    const delta= clock.getElapsedTime();
+
+    cube.rotation.y= delta;
+
     controls.update();
-
     renderer.render(scene, camera) ;
-
     requestAnimationFrame(animate);
-}
 
+}
 
 animate();
