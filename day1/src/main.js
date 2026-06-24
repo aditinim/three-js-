@@ -1,8 +1,8 @@
 import './style.css'
 import * as THREE from "three"
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import {RGBELoader} from "three/examples/jsm/Addons.js";
-import {GLTFLoader} from "three/examples/jsm/Addons.js"; 
+import {GLTFLoader, RGBELoader} from "three/examples/jsm/Addons.js";
+
 
 
 const size= {
@@ -49,12 +49,20 @@ envMap.load('./envMap.hdr', (envMap)=>{
 
 //gltf loader
 
+let mixer;
+
 const gltfLoader= new GLTFLoader();
 gltfLoader.load("./robot.glb", (gltf)=>{
     const model= gltf.scene;
     model.position.y= -3;
 
-    scene.add(model);
+    mixer= new THREE.AnimationMixer(model);
+    const action= mixer.clipAction(gltf.animations[0]);
+
+    action.play();
+    
+
+    // scene.add(model);
 })
 
 //camera
@@ -87,9 +95,6 @@ scene.add(pointLight);
 
 
 
-
-
-
 // const geometry = new THREE.CylinderGeometry( 5, 5, 20, 32 );
 const geometry= new THREE.BoxGeometry(1, 1, 1) //width, height, depth -> shape
 // const material = new THREE.MeshBasicMaterial({ color: "#5be8f5" }); //kapde
@@ -109,7 +114,7 @@ const cube= new THREE.Mesh(geometry, material); //actor
 
 
 
-// scene.add(cube);
+scene.add(cube);
 
 
 //canvas (parda)
@@ -137,13 +142,45 @@ window.addEventListener('resize', ()=>{
 
 })
 
+const raycaster= new THREE.Raycaster();
+const mouse = new THREE.Vector2();
+
+
+window.addEventListener('mousemove', (e)=>{
+    mouse.x= (e.clientX / window.innerWidth) *2 -1;
+    mouse.y= -((e.clientY/ window.innerHeight) *2 -1);
+
+
+
+})
+
+window.addEventListener("click", ()=>{
+    raycaster.setFromCamera(mouse, camera);
+
+    const intersect= raycaster.intersectObject(cube);
+
+    if(intersect.length){
+        cube.material.color.set("green")
+    }
+})
+
+
+
 
 const animate= ()=>{
     // cube.rotation.x+= 0.01;
 
     const delta= clock.getElapsedTime();
 
-    cube.rotation.y= delta;
+    // const newDelta= clock.getDelta();
+
+
+
+    // cube.rotation.y= delta;
+
+    // if(mixer){
+    //     mixer.update(0.01);
+    // }
 
     controls.update();
     renderer.render(scene, camera) ;
