@@ -1,7 +1,7 @@
 import './style.css'
 import * as THREE from "three"
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-
+import {RGBELoader} from "three/examples/jsm/Addons.js";
 
 const size= {
     width: window.innerWidth,
@@ -33,6 +33,16 @@ const texture= textureLoader.load("https://images.unsplash.com/photo-16214230287
 );
 
 
+// rgbEloader
+
+const envMap= new RGBELoader();
+
+envMap.load('./envMap.hdr', (envMap)=>{
+    envMap.mapping=  THREE.EquirectangularReflectionMapping;
+    scene.background= envMap;
+    scene.environment= envMap;
+
+})
 
 
 //camera
@@ -53,15 +63,15 @@ const directionalLight= new THREE.DirectionalLight(0xffffff, 1);
 const pointLight= new THREE.PointLight("#ffff", 4, 10, 40);
 scene.add(ambientLight);
 // scene.add(directionalLight);
-const directionalLightHelper = new THREE.DirectionalLightHelper(directionalLight);
-directionalLight.position.set(2,2,2);
+// const directionalLightHelper = new THREE.DirectionalLightHelper(directionalLight);
+// directionalLight.position.set(2,2,2);
 
-scene.add(directionalLightHelper);
+// scene.add(directionalLightHelper);
 
-const pointLightHelper = new THREE.PointLightHelper(directionalLight);
+// const pointLightHelper = new THREE.PointLightHelper(pointLight);
 
 scene.add(pointLight);
-scene.add(pointLightHelper);
+// scene.add(pointLightHelper);
 
 
 
@@ -75,7 +85,11 @@ const geometry= new THREE.BoxGeometry(1, 1, 1) //width, height, depth -> shape
 //     map: texture,
 //     color: "red"
 // });
-const material = new THREE.MeshStandardMaterial({ color: "red" }); 
+const material = new THREE.MeshStandardMaterial({
+     color: "red" ,
+     metalness: 0,
+     roughness: 0.1
+    }); 
 
 const cube= new THREE.Mesh(geometry, material); //actor
 
