@@ -2,6 +2,8 @@ import './style.css'
 import * as THREE from "three"
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import {RGBELoader} from "three/examples/jsm/Addons.js";
+import {GLTFLoader} from "three/examples/jsm/Addons.js"; 
+
 
 const size= {
     width: window.innerWidth,
@@ -39,11 +41,21 @@ const envMap= new RGBELoader();
 
 envMap.load('./envMap.hdr', (envMap)=>{
     envMap.mapping=  THREE.EquirectangularReflectionMapping;
-    scene.background= envMap;
+    // scene.background= envMap;
     scene.environment= envMap;
 
 })
 
+
+//gltf loader
+
+const gltfLoader= new GLTFLoader();
+gltfLoader.load("./robot.glb", (gltf)=>{
+    const model= gltf.scene;
+    model.position.y= -3;
+
+    scene.add(model);
+})
 
 //camera
 const camera = new THREE.PerspectiveCamera(
@@ -97,7 +109,7 @@ const cube= new THREE.Mesh(geometry, material); //actor
 
 
 
-scene.add(cube);
+// scene.add(cube);
 
 
 //canvas (parda)
