@@ -49,7 +49,24 @@ camera.position.z= 5;
 //lights
 
 const ambientLight= new THREE.AmbientLight("0xffffff", 1.5);
+const directionalLight= new THREE.DirectionalLight(0xffffff, 1);
+const pointLight= new THREE.PointLight("#ffff", 4, 10, 40);
 scene.add(ambientLight);
+// scene.add(directionalLight);
+const directionalLightHelper = new THREE.DirectionalLightHelper(directionalLight);
+directionalLight.position.set(2,2,2);
+
+scene.add(directionalLightHelper);
+
+const pointLightHelper = new THREE.PointLightHelper(directionalLight);
+
+scene.add(pointLight);
+scene.add(pointLightHelper);
+
+
+
+
+
 
 // const geometry = new THREE.CylinderGeometry( 5, 5, 20, 32 );
 const geometry= new THREE.BoxGeometry(1, 1, 1) //width, height, depth -> shape
