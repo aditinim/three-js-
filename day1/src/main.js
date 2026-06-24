@@ -46,13 +46,19 @@ const camera = new THREE.PerspectiveCamera(
 camera.position.z= 5;
 
 
+//lights
+
+const ambientLight= new THREE.AmbientLight("0xffffff", 1.5);
+scene.add(ambientLight);
+
 // const geometry = new THREE.CylinderGeometry( 5, 5, 20, 32 );
 const geometry= new THREE.BoxGeometry(1, 1, 1) //width, height, depth -> shape
 // const material = new THREE.MeshBasicMaterial({ color: "#5be8f5" }); //kapde
-const material = new THREE.MeshBasicMaterial({
-    map: texture,
-    color: "red"
-});
+// const material = new THREE.MeshBasicMaterial({
+//     map: texture,
+//     color: "red"
+// });
+const material = new THREE.MeshStandardMaterial({ color: "red" }); 
 
 const cube= new THREE.Mesh(geometry, material); //actor
 
